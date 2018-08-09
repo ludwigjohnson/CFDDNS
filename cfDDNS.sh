@@ -62,8 +62,11 @@ if [ "$instruction" = "install" ]; then
                         read -p "Proxy traffic through Cloudflare (y/n): " proxied
                         echo "$proxied"
                         if [ "$proxied" = "n" ]; then
+                                proxied=0
                                 read -p "Enter TTL (Time To Live) in seconds: " record_ttl
                                 echo "$record_ttl"
+                        else
+                                proxied=1
                         fi
 
                         echo "Choose an IP provider"
