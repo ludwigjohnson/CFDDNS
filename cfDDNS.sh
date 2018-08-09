@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#TODO fix logging in updateDNS.sh file
+
 instruction="$1"
 if [ "$instruction" = "install" ]; then
 
@@ -52,7 +54,7 @@ if [ "$instruction" = "install" ]; then
                 fi
 
                 crontab -l > mycron
-                echo "$update_time * * * * $domain_list" >> mycron
+                echo "*/$update_time * * * * $domain_list" >> mycron
                 crontab mycron
                 rm mycron
         fi
