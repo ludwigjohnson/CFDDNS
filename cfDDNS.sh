@@ -51,7 +51,7 @@ if [ "$instruction" = "install" ]; then
                         update_time=5
                 fi
 
-                crontab -l mycron
+                crontab -l > mycron
                 echo "$update_time * * * * $domain_list" >> mycron
                 crontab mycron
                 rm mycron
