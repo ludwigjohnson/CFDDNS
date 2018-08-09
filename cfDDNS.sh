@@ -171,10 +171,10 @@ if [ "$instruction" = "install" ]; then
         }
         installedMenu
 elif [ "$instruction" = "update" ]; then
-        update=$($domain_list)
+        update=$($HOME/bin/cfDDNS/list.sh)
         echo "$update"
 elif [ "$instruction" = "help" ]; then
         echo "This should contain help information in the future. I will hopefully not forget, otherwise contact me on github and I'll add it."
 else
-        read -p "An error occurred, unknown command $instruction. Please use help command or contact me at github.com/ludwigjohnson/CFDDNS"
+        read -p "An error occurred, unknown command $instruction, maybe you meant to install? If so, run 'cfDDNS.sh install'. Please use 'cfDDNS.sh help' or contact me at github.com/ludwigjohnson/CFDDNS if you have any other questions"
 fi
