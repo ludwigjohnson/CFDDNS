@@ -136,6 +136,7 @@ if [ "$instruction" = "install" ]; then
                                 echo "Currently installed domains: "
                                 num=5
                                 #get domains in column 5
+                                #TODO this will currently return the examples as well, remove those
                                 domains_installed=$(awk < $domain_list -v x=$num '{print $x}')
                                 #remove " char
                                 domains_installed=${domains_installed//\"/$''}
