@@ -153,9 +153,12 @@ if [ "$instruction" = "install" ]; then
                         ;;
                         3)
                                 #TODO enable/disable a domain or all domains
+                                echo "This hasn't been completed yet, but a simple trick is to go to $domain_list and comment out the domains you want to disable and remove the comment when you want to enable them again."
                         ;;
                         4)
                                 #TODO 1) remove crontab entry 2) remove scripts in $HOME/bin/cfDDNS
+                                echo "This hasn't been completed yet, but simply remove the crontab entry for cfDDNS to stop automatic IP updates"
+                                echo "To remove everything remove $script_dir and its contents and the install file (cfDDNS.sh)"
                         ;;
                         5)
 
