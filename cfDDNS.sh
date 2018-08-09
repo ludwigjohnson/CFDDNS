@@ -26,15 +26,21 @@ if [ "$instruction" = "install" ]; then
         if [ -d "$script_dir" ]; then
                 isInstalled=1
         else
-                echo "Downloading files..."
+                WarningColor='\033[0;31m'
+                SuccessColor='\033[00;32m'
+                NoColor='\033[0m'
+                echo -e "${WarningColor}Downloading files...${NoColor}"
+
+                
                 mkdir -p "$script_dir"
-                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh > "$script_dir/getID.sh"
-                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/list.sh > "$domain_list"
-                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/updateDNS.sh > "$script_dir/updateDNS.sh"
+                curl -s https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh > "$script_dir/getID.sh"
+                curl -s https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/list.sh > "$domain_list"
+                curl -s https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/updateDNS.sh > "$script_dir/updateDNS.sh"
                 chmod 771 "$script_dir/getID.sh"
                 chmod 771 "$domain_list"
                 chmod 771 "$script_dir/updateDNS.sh"
-                echo "Download complete."
+                export PATH=$PATH:$HOME/bin
+                echo -e "${SuccessColor}Download complete.${NoColor}"
 
                 #TODO add crontab job and check how often the user wants to run it
         fi
@@ -62,11 +68,11 @@ if [ "$instruction" = "install" ]; then
                         read -p "Proxy traffic through Cloudflare (y/n): " proxied
                         echo "$proxied"
                         if [ "$proxied" = "n" ]; then
-                                proxied=0
+                                proxied="false"
                                 read -p "Enter TTL (Time To Live) in seconds: " record_ttl
                                 echo "$record_ttl"
                         else
-                                proxied=1
+                                proxied="true"
                         fi
 
                         echo "Choose an IP provider"
