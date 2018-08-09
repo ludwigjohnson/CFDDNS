@@ -4,7 +4,7 @@
 clear
 
 instruction="$1"
-if [ $instruction = "install" ]; then
+if [ "$instruction" = "install" ]; then
 
         #Variables
         auth_email="" #Cloudflare email
@@ -26,10 +26,15 @@ if [ $instruction = "install" ]; then
         if [ -d "$script_dir" ]; then
                 isInstalled=1
         else
+                echo "Downloading files..."
                 mkdir -p "$script_dir"
-                echo INFO=$(curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh) > "$script_dir/getID.sh"
-                echo INFO=$(curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/list.sh) > "$domain_list"
-                echo INFO=$(curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/updateDNS.sh) > "$script_dir/updateDNS.sh"
+                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh > "$script_dir/getID.sh"
+                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh > "$domain_list"
+                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh > "$script_dir/updateDNS.sh"
+                chmod 771 "$script_dir/getID.sh"
+                chmod 771 "$domain_list"
+                chmod 771 "$script_dir/updateDNS.sh"
+                echo "Download complete."
 
                 #TODO add crontab job and check how often the user wants to run it
         fi
@@ -48,7 +53,7 @@ if [ $instruction = "install" ]; then
                 echo "$zone_name"
                 read -p "Enter what IP-adress the DNS record currently resolvs to: " current_content
                 echo "$current_content"
-                record_id=$($script_dir/getID.sh "$zone_id" "$zone_name" "$current_content")
+                record_id=$($script_dir/getID.sh "$zone_id" "$zone_name" "$current_content" "$auth_email" "$auth_api")
                 echo "DNS record ID: $record_id"
                 if [ "$record_id" = "" ]; then
                         read -p "An error occurred, please check that your values are correct and try again."
@@ -121,9 +126,10 @@ if [ $instruction = "install" ]; then
                         ;;
                 esac
         }
-elif [ $instruction = "update" ]; then
+        installedMenu
+elif [ "$instruction" = "update" ]; then
         #todo, run the command that crontab is going to use
-elif [ $instruction = "help" ]; then
+elif [ "$instruction" = "help" ]; then
         echo "This should contain help information in the future. I will hopefully not forget, otherwise contact me on github and I'll add it."
 else
         read -p "An error occurred, unknown command $instruction. Please use help command or contact me at github.com/ludwigjohnson/CFDDNS"
