@@ -29,8 +29,8 @@ if [ "$instruction" = "install" ]; then
                 echo "Downloading files..."
                 mkdir -p "$script_dir"
                 curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh > "$script_dir/getID.sh"
-                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh > "$domain_list"
-                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/getID.sh > "$script_dir/updateDNS.sh"
+                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/list.sh > "$domain_list"
+                curl https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/opt/cfDDNS/updateDNS.sh > "$script_dir/updateDNS.sh"
                 chmod 771 "$script_dir/getID.sh"
                 chmod 771 "$domain_list"
                 chmod 771 "$script_dir/updateDNS.sh"
@@ -128,6 +128,7 @@ if [ "$instruction" = "install" ]; then
         }
         installedMenu
 elif [ "$instruction" = "update" ]; then
+        echo "test- update"
         #todo, run the command that crontab is going to use
 elif [ "$instruction" = "help" ]; then
         echo "This should contain help information in the future. I will hopefully not forget, otherwise contact me on github and I'll add it."
