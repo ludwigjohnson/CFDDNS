@@ -5,3 +5,5 @@ This is a Work-In-Progress (WIP) but it does work. There might however be some b
 Run the following script and enter the Cloudflare info needed to update your DNS settings via the Cloudflare API.
 `wget https://raw.githubusercontent.com/ludwigjohnson/CFDDNS/master/cfDDNS.sh -O cfDDNS.sh && bash cfDDNS.sh install`
 The file is the main install tool but it will download the three files available in the opt/cfDDNS folder as well.
+
+To add more domains/subdomains, simply run the `bash cfDDNS.sh install` command again.
