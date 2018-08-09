@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#Clears screen
-clear
-
 instruction="$1"
 if [ "$instruction" = "install" ]; then
+
+        #Clears screen
+        clear
 
         #Variables
         auth_email="" #Cloudflare email
@@ -39,10 +39,22 @@ if [ "$instruction" = "install" ]; then
                 chmod 771 "$script_dir/getID.sh"
                 chmod 771 "$domain_list"
                 chmod 771 "$script_dir/updateDNS.sh"
-                export PATH=$PATH:$HOME/bin
+                #export PATH=$PATH:$HOME/bin
                 echo -e "${SuccessColor}Download complete.${NoColor}"
 
-                #TODO add crontab job and check how often the user wants to run it
+                read -p "Enter how often you want to update the IP (in minutes from 1-59. For more granular control, edit the crontab for this user later): " update_time
+                if [ $update_time -le 59 -a $update_time -ge 1 ]; then
+                        echo "Cronjob is set to run every $update_time minutes."
+                else
+                        echo -e "${WarningColor}You can only enter integers from 1 to 59. If you want better control, you can change the crontab for this user by running 'crontab -e' after the install is complete.${NoColor}"
+                        echo "The cronjob got a default value of 5 minutes to be able to continue this install. You can edit this in the crontab later."
+                        update_time=5
+                fi
+
+                crontab -l mycron
+                echo "$update_time * * * * $domain_list" >> mycron
+                crontab mycron
+                rm mycron
         fi
 
         # EMAIL, APIKEY, ZONEID (root domain zone ID), ZONENAME (domain/subdomain), RECORDID (automatically gotten via API), RECORDTYPE (A, AAAA), RECORDTTL (seconds), PROXIED, IPPROVIDERID(get list of ip providers)
@@ -109,8 +121,9 @@ if [ "$instruction" = "install" ]; then
                 echo "What do you want to do?"
                 echo "[1]- Add a new domain"
                 echo "[2]- Remove a domain"
-                echo "[3]- Uninstall cfDDNS" #TODO Change to enable/disable since it isn't really installed more than a couple of scripts and a crontab entry
-                echo "[4]- Exit cfDDNS config"
+                echo "[3]- Enable/disable domain"
+                echo "[4]- Uninstall cfDDNS"
+                echo "[5]- Exit cfDDNS config"
                 read -p "Selection: " selection
                 #echo "$selection"
                 case $selection in
@@ -118,12 +131,33 @@ if [ "$instruction" = "install" ]; then
                                 addDomain
                         ;;
                         2)
+                                echo "Currently installed domains: "
+                                num=5
+                                #get domains in column 5
+                                domains_installed=$(awk < $domain_list -v x=$num '{print $x}')
+                                #remove " char
+                                domains_installed=${domains_installed//\"/$''}
+                                echo $domains_installed
+                                read -p "Which domain should be removed from cfDDNS: " domain_to_remove
+                                #gets line number
+                                line_nr=$(awk 'match($0,v){print NR; exit}' v=\"$domain_to_remove\" $domain_list)
+                                if [ "$line_nr" = "" ]; then
+                                        echo "The domain you entered was not found and cannot be removed."
+                                else
+                                        #remove line
+                                        output=$(sed -e "$line_nr d" $domain_list)
+                                        #save the file without line containing domainname above
+                                        echo "$output" > $domain_list
+                                fi
 
                         ;;
                         3)
-
+                                #TODO enable/disable a domain or all domains
                         ;;
                         4)
+                                #TODO 1) remove crontab entry 2) remove scripts in $HOME/bin/cfDDNS
+                        ;;
+                        5)
 
                         ;;
                         *)
@@ -137,8 +171,8 @@ if [ "$instruction" = "install" ]; then
         }
         installedMenu
 elif [ "$instruction" = "update" ]; then
-        echo "test- update"
-        #todo, run the command that crontab is going to use
+        update=$($domain_list)
+        echo "$update"
 elif [ "$instruction" = "help" ]; then
         echo "This should contain help information in the future. I will hopefully not forget, otherwise contact me on github and I'll add it."
 else
